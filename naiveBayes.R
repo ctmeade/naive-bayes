@@ -10,7 +10,8 @@ summary(training)
 head(training)
 tail(training)
 summary(test)
-#First Model
+
+#Model 1
 model1 <- naiveBayes(income~.,data = training)
 summary(model1)
 str(model1)
@@ -39,4 +40,38 @@ model2_test_predict <- predict(model2,test[,-1])
 table(pred=model2_test_predict,true=test$income)
 #fraction of correct predictions
 mean(model2_test_predict==test$income)
+
+#Model 3
+training$workclass <- as.factor(training$workclass)
+plot(training$workclass)
+summary(training$workclass)
+#Refining workclass
+training$workclass = gsub("^Federal-gov","Gov",training$workclass)
+training$workclass = gsub("^Local-gov","Gov",training$workclass)
+training$workclass = gsub("^State-gov","Gov",training$workclass)
+training$workclass = gsub("^Self-emp-inc","Self-emp",training$workclass)
+training$workclass = gsub("^Self-emp-not-inc","Self-emp",training$workclass)
+training$workclass = gsub("^Never-worked","Unemployed",training$workclass)
+training$workclass = gsub("^Without-pay","Unemployed",training$workclass)
+
+test$workclass = gsub("^Federal-gov","Gov",test$workclass)
+test$workclass = gsub("^Local-gov","Gov",test$workclass)
+test$workclass = gsub("^State-gov","Gov",test$workclass)
+test$workclass = gsub("^Self-emp-inc","Self-emp",test$workclass)
+test$workclass = gsub("^Self-emp-not-inc","Self-emp",test$workclass)
+test$workclass = gsub("^Never-worked","Unemployed",test$workclass)
+test$workclass = gsub("^Without-pay","Unemployed",test$workclass)
+
+model3 <- naiveBayes(income~.,data = training)
+summary(model3)
+str(model3)
+
+#Model Analyitics
+model3_test_predict <- predict(model3,test[,-1])
+#confusion matrix
+table(pred=model3_test_predict,true=test$income)
+#fraction of correct predictions
+mean(model3_test_predict==test$income)
+
+#Model 4
 
